@@ -1,0 +1,73 @@
+$colors:
+  "blue"  #3C9ADA,
+  "green" #2BA95F,
+  "grass"   #4CC6AD,
+  "gray"  #464646;
+@each $c in $colors{
+  .#{nth($c, 1)}{
+    background: nth($c, 2);
+  }
+}
+
+*{
+  box-sizing: border-box;
+}
+
+// atomic CSS -----------------------
+.flex{ display: flex; }
+
+.flex-column{
+  flex-direction: column;
+  &.flex-reverse{
+    flex-flow: column-reverse;
+  }
+}
+
+.flex-row{
+  flex-direction: row;
+  &.flex-reverse{
+    flex-flow: row-reverse;
+  }
+}
+
+.flex-row{ flex-direction: row; }
+
+.flex-center{ justify-content: center; }
+
+.flex-middle{ align-items: center; }
+
+.flex-stretch{ align-items: stretch; }
+
+$flex_value:
+  "1" 1,
+  "2" 2,
+  "3" 2,
+  "4" 4,
+  "5" 5;
+@each $i in $flex_value{
+  .flex-#{nth($i, 1)}{
+    flex: nth($i, 2) 0 25%;
+  }
+}
+
+.flex-justify-end{ justify-content: flex-end; }
+
+.pointer{ cursor: pointer; }
+// -----------------------
+
+//custom CSS -----------------------
+html{
+  height: 100%;
+  width: 100%;
+}
+
+body{
+  font-family: sans-serif;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  color: white;
+  font-family: 'Lato', sans-serif;
+}
+
+// -----------------------
