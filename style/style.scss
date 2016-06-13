@@ -1,7 +1,7 @@
 $colors:
   "blue"  #3C9ADA,
   "green" #2BA95F,
-  "grass"   #4CC6AD,
+  "grass" #4CC6AD,
   "gray"  #464646;
 @each $c in $colors{
   .#{nth($c, 1)}{
