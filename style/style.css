@@ -1,0 +1,74 @@
+.blue {
+  background: #3C9ADA; }
+
+.green {
+  background: #2BA95F; }
+
+.grass {
+  background: #4CC6AD; }
+
+.gray {
+  background: #464646; }
+
+* {
+  box-sizing: border-box; }
+
+.flex {
+  display: flex; }
+
+.flex-column {
+  flex-direction: column; }
+  .flex-column.flex-reverse {
+    flex-flow: column-reverse; }
+
+.flex-row {
+  flex-direction: row; }
+  .flex-row.flex-reverse {
+    flex-flow: row-reverse; }
+
+.flex-row {
+  flex-direction: row; }
+
+.flex-center {
+  justify-content: center; }
+
+.flex-middle {
+  align-items: center; }
+
+.flex-stretch {
+  align-items: stretch; }
+
+.flex-1 {
+  flex: 1 0 25%; }
+
+.flex-2 {
+  flex: 2 0 25%; }
+
+.flex-3 {
+  flex: 2 0 25%; }
+
+.flex-4 {
+  flex: 4 0 25%; }
+
+.flex-5 {
+  flex: 5 0 25%; }
+
+.flex-justify-end {
+  justify-content: flex-end; }
+
+.pointer {
+  cursor: pointer; }
+
+html {
+  height: 100%;
+  width: 100%; }
+
+body {
+  font-family: sans-serif;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  color: white;
+  font-family: 'Lato', sans-serif; }
+
+/*# sourceMappingURL=style.css.map */
