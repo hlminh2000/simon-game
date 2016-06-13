@@ -38,6 +38,9 @@
 .flex-stretch {
   align-items: stretch; }
 
+.flex-wrap {
+  flex-wrap: wrap; }
+
 .flex-1 {
   flex: 1 0 25%; }
 
@@ -69,6 +72,90 @@ body {
   width: 100%;
   margin: 0;
   color: white;
-  font-family: 'Lato', sans-serif; }
+  font-family: 'Lato', sans-serif;
+  background: linear-gradient(-45deg, #1167BD, #55F4C2);
+  overflow: hidden; }
+
+.stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -76px;
+  margin-left: -76px;
+  width: 168px;
+  transform: rotate(45deg); }
+  .stage .stage-box {
+    margin: 2px;
+    background: rgba(0, 0, 0, 0.2);
+    height: 80px;
+    width: 80px;
+    position: relative; }
+
+.stage-icon {
+  transform: rotate(-45deg);
+  width: 20px;
+  height: 20px; }
+
+.rotator {
+  height: 500px;
+  width: 500px;
+  position: relative;
+  left: 0;
+  animation: spin 120s infinite;
+  animation-timing-function: linear; }
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
+.decor {
+  transform: rotate(45deg);
+  position: absolute;
+  animation: spin_reverse 120s infinite;
+  animation-timing-function: linear; }
+  .decor .decor-box {
+    background: rgba(0, 0, 0, 0.05); }
+
+@keyframes spin_reverse {
+  0% {
+    transform: rotate(45deg); }
+  100% {
+    transform: rotate(-315deg); } }
+#decor_1 {
+  top: 0%;
+  left: 50%;
+  width: 67.2px; }
+  #decor_1 .decor-box {
+    margin: 0.8px;
+    height: 32px;
+    width: 32px; }
+
+#decor_2 {
+  top: 50%;
+  left: 10%;
+  width: 109.2px; }
+  #decor_2 .decor-box {
+    margin: 1.3px;
+    height: 52px;
+    width: 52px; }
+
+#decor_3 {
+  top: 60%;
+  left: 70%;
+  width: 134.4px; }
+  #decor_3 .decor-box {
+    margin: 1.6px;
+    height: 64px;
+    width: 64px; }
+
+#decor_4 {
+  top: -5%;
+  left: -5%;
+  width: 840px; }
+  #decor_4 .decor-box {
+    margin: 10px;
+    height: 400px;
+    width: 400px; }
 
 /*# sourceMappingURL=style.css.map */
