@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,target-densitydpi=device-dpi, user-scalable=no" />
     <meta charset="utf-8">
     <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="style/style.css" media="screen" title="no title" charset="utf-8">
@@ -36,20 +37,26 @@
         <div class="decor-box"></div>
       </div>
     </div>
-    <div class="stage flex flex-wrap">
-      <div class="stage-box flex flex-center flex-middle"><img class="stage-icon" src="assets/triangle.png" alt="" /></div>
-      <div class="stage-box flex flex-center flex-middle"><img class="stage-icon" src="assets/circle.png" alt="" /></div>
-      <div class="stage-box flex flex-center flex-middle"><img class="stage-icon" src="assets/square.png" alt="" /></div>
-      <div class="stage-box flex flex-center flex-middle"><img class="stage-icon" src="assets/x.png" alt="" /></div>
-    </div>
-    <div class="count">
-      <span class="label">Count</span>
-      <span class="value"></span>
-    </div>
-    </div>
-    <div class="strictMode">
-      <span class="label">Strict</span>
-      <span class="value"></span>
+    <div class="stageCont">
+      <div class="stage flex flex-wrap">
+        <div id="toop" class="stage-box flex flex-center flex-middle"><img class="stage-icon" src="assets/triangle.png" alt="" /></div>
+        <div id="right" class="stage-box flex flex-center flex-middle"><img class="stage-icon" src="assets/circle.png" alt="" /></div>
+        <div id="bottom" class="stage-box flex flex-center flex-middle"><img class="stage-icon" src="assets/square.png" alt="" /></div>
+        <div id="left" class="stage-box flex flex-center flex-middle"><img class="stage-icon" src="assets/x.png" alt="" /></div>
+      </div>
+      <div class="count">
+        <span class="label">Count</span>
+        <span class="value">0</span>
+      </div>
+      <div class="strictMode">
+        <span class="label">Strict</span>
+        <span class="value pointer">OFF</span>
+      </div>
+      <div class="button button-start flex flex-middle flex-center">
+        <div class="button-background triangle-left"></div>
+        <div class="button-background triangle-right"></div>
+        <div class="button-text">START</div>
+      </div>
     </div>
   </body>
 
