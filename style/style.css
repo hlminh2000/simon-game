@@ -147,7 +147,7 @@ body {
     border-left: solid 21px #68b3ce;
     transform: rotate(225deg); }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .stage {
     left: 50%;
     top: 70%; }
@@ -224,7 +224,7 @@ body {
     width: 80px; }
 
 #decor_4 {
-  top: -5%;
+  top: -95%;
   left: -5%;
   width: 1040px; }
   #decor_4 .decor-box {
