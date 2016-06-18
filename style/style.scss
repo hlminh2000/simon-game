@@ -100,6 +100,10 @@ body{
     height: $stageBoxSize;
     width: $stageBoxSize;
     position: relative;
+    transition: 1s;
+    &.blinking{
+      background: rgba(yellow, 0.5);
+    }
   }
 }
 
@@ -107,6 +111,11 @@ body{
   transform: rotate(-45deg);
   width: $stageBoxSize*$iconScale;
   height: $stageBoxSize*$iconScale;
+  transition: 1s;
+  opacity: 0.5;
+  &.blinking{
+    opacity: 1;
+  }
 }
 
 .stageCont{

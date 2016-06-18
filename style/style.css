@@ -89,12 +89,19 @@ body {
     background: rgba(0, 0, 0, 0.2);
     height: 100px;
     width: 100px;
-    position: relative; }
+    position: relative;
+    transition: 1s; }
+    .stage .stage-box.blinking {
+      background: rgba(255, 255, 0, 0.5); }
 
 .stage-icon {
   transform: rotate(-45deg);
   width: 25px;
-  height: 25px; }
+  height: 25px;
+  transition: 1s;
+  opacity: 0.5; }
+  .stage-icon.blinking {
+    opacity: 1; }
 
 .stageCont {
   position: absolute;
