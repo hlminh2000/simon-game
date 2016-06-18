@@ -12,6 +12,7 @@ var StageBox = (function () {
         this.element.addEventListener('click', function () {
             _this.blink();
         });
+        console.log(this.element.id);
     }
     StageBox.prototype.resetAudio = function () {
         if (this.audio != null) {
@@ -36,39 +37,51 @@ var StageBox = (function () {
             _this.element.classList.remove('blinking');
             _this.element.children[0].classList.remove('blinking');
         }, 400);
-        console.log(this.element.id);
     };
     return StageBox;
 }());
+var BoxStage = (function () {
+    function BoxStage(boxSet) {
+        this.boxes = boxSet;
+    }
+    BoxStage.prototype.getBox = function (id) {
+        return this.boxes.reduce(function (defalt, box) {
+            return box.element.id == id ? box : null;
+        });
+    };
+    return BoxStage;
+}());
 var GameState = (function () {
     function GameState(initialState) {
-        this.playerTurn = initialState.playerTurn;
+        this.isPlayerTurn = initialState.isPlayerTurn;
         this.isPlaying = initialState.isPlaying;
         this.strictMode = initialState.strictMode;
+        this.currentSequence = initialState.currentSequence;
     }
     return GameState;
 }());
-function loadGame(state, boxes) {
-    var delay = 2000;
-    var timer = setTimeout(function () {
-        if (!state.isPlaying) {
-            return;
-        }
-        else {
-            console.log(state);
-        }
-    }, delay);
-    loadGame(state, boxes);
+function loadGame(state, stage) {
+    var sequenceDelay = 1000;
+    if (state.isPlaying) {
+        var delay = sequenceDelay;
+        state.currentSequence.forEach(function (id) {
+            setTimeout(function () {
+                stage.getBox(id).blink();
+            }, delay);
+            delay += sequenceDelay;
+        });
+        console.log(state.currentSequence);
+    }
 }
 window.addEventListener('load', function () {
-    var a_StageBox = $$('stage-box').map(function (element) {
+    var stage = new BoxStage($$('stage-box').map(function (element) {
         return new StageBox(element);
-    });
+    }));
     var gameState = new GameState({
-        playerTurn: false,
+        isPlayerTurn: false,
         isPlaying: false,
         strictMode: false,
-        currentSequence: [],
+        currentSequence: ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'],
     });
     $('strictModeToggle').addEventListener('click', function () {
         gameState.strictMode = !gameState.strictMode;
@@ -77,6 +90,6 @@ window.addEventListener('load', function () {
     $('startButton').addEventListener('click', function () {
         gameState.isPlaying = !gameState.isPlaying;
         $('startButton-text').innerText = gameState.isPlaying ? 'STOP' : 'START';
-        loadGame(gameState, a_StageBox);
+        loadGame(gameState, stage);
     });
 });

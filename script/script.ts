@@ -13,10 +13,10 @@ class StageBox{
    constructor(element:HTMLElement){
       this.element = element;
       this.resetAudio();
-
       this.element.addEventListener('click', ()=>{
-      this.blink();
+         this.blink();
       });
+      console.log(this.element.id);
    }
    resetAudio(){
       if(this.audio != null){
@@ -42,46 +42,64 @@ class StageBox{
          this.element.classList.remove('blinking');
          this.element.children[0].classList.remove('blinking');
       }, 400);
-      console.log(this.element.id);
+   }
+}
+
+class BoxStage{
+   boxes:Array<StageBox>;
+   constructor(boxSet:Array<StageBox>){
+      this.boxes = boxSet;
+   }
+   getBox(id:string):StageBox{
+      return this.boxes.reduce((defalt:StageBox, box:StageBox)=>{
+         return box.element.id == id ? box : null;
+      });
    }
 }
 
 class GameState{
-   public playerTurn:boolean;
+   public isPlayerTurn:boolean;
    public isPlaying:boolean;
    public strictMode:boolean;
    public currentSequence:Array<string>;
    constructor(initialState:GameState){
-      this.playerTurn = initialState.playerTurn;
+      this.isPlayerTurn = initialState.isPlayerTurn;
       this.isPlaying = initialState.isPlaying;
       this.strictMode = initialState.strictMode;
+      this.currentSequence = initialState.currentSequence;
    }
 }
 
-function loadGame(state: GameState, boxes:Array<StageBox>)
-{
-   // var delay:number = 10000;
-   let delay = 2000;
-   let timer = setTimeout(()=>{
-      if(!state.isPlaying){
-         return;
-      }  else  {
-         console.log(state);
-      }
-   }, delay);
-   loadGame(state, boxes);
+function loadGame(state: GameState, stage:BoxStage):void{
+   let sequenceDelay:number = 1000;
+   if(state.isPlaying){
+      var delay:number = sequenceDelay;
+      state.currentSequence.forEach((id:string) => {
+         setTimeout(()=>{
+            stage.getBox(id).blink();
+         },delay);
+         delay+=sequenceDelay;
+      });
+      console.log(state.currentSequence);
+      // var newBoxIndex = Math.floor(Math.random() * stage.boxes.length) + 0;
+      // stage.boxes[newBoxIndex].blink();
+      // state.currentSequence.push(stage.boxes[newBoxIndex].element.id);
+   }
 }
 
 window.addEventListener('load', () => {
-   let a_StageBox:Array<StageBox> = $$('stage-box').map((element:HTMLElement)=>{
-      return new StageBox(element);
-   });
+
+   var stage:BoxStage = new BoxStage(
+      $$('stage-box').map((element)=>{
+         return new StageBox(element);
+      })
+   );
 
    var gameState = new GameState({
-      playerTurn      : false,
+      isPlayerTurn      : false,
       isPlaying       : false,
       strictMode      : false,
-      currentSequence : [],
+      currentSequence : ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'],
    });
 
    $('strictModeToggle').addEventListener('click' , () => {
@@ -92,7 +110,7 @@ window.addEventListener('load', () => {
    $('startButton').addEventListener('click' , () => {
       gameState.isPlaying = !gameState.isPlaying;
       $('startButton-text').innerText = gameState.isPlaying ? 'STOP' : 'START';
-      loadGame(gameState, a_StageBox);
+      loadGame(gameState, stage);
    });
 
 });
