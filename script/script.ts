@@ -9,33 +9,38 @@ function $$(className:string){
 class StageBox{
    element:HTMLElement;
    audio:HTMLAudioElement;
+   audioSrc:string;
+   self:StageBox;
+   stage:BoxStage;
 
    constructor(element:HTMLElement){
       this.element = element;
-      this.resetAudio();
-      this.element.addEventListener('click', ()=>{
-         this.blink();
-      });
-      console.log(this.element.id);
+      this.audioSrc = this.element.id == 'x' ? '/assets/sound/C3.mp3'
+         : this.element.id == 'square'    ? '/assets/sound/E3.mp3'
+         : this.element.id == 'circle'    ? '/assets/sound/G3.mp3'
+         : this.element.id == 'triangle'  ? '/assets/sound/B3.mp3'
+         : null;
+      this.audio = new Audio(this.audioSrc);
+      this.self = this;
    }
-   resetAudio(){
-      if(this.audio != null){
-         delete this.audio;
-      }
-      this.audio = new Audio(
-         this.element.id == 'x' ? '/assets/sound/C3.mp3'
-            : this.element.id == 'square' ? '/assets/sound/E3.mp3'
-               : this.element.id == 'circle' ? '/assets/sound/G3.mp3'
-                  : this.element.id == 'triangle' ? '/assets/sound/B3.mp3'
-                     : null
-      );
+   enable(){
+      this.element.addEventListener('click', ()=>{this.onClick()});
+   }
+   disable(){
+      this.element.removeEventListener('click', ()=>{this.onClick()});
    }
    onClick(){
       this.blink();
    }
    blink(){
-      this.resetAudio();
+      // console.log('stack 1 ', this.audio);
+      delete this.audio;
+      // console.log('stack 2 ', this.audio);
+      this.audio = new Audio(this.audioSrc);
+      // console.log('stack 3 ', this.audio);
       this.audio.play();
+      // console.log('stack 4 ', this.audio);
+
       this.element.classList.add('blinking');
       this.element.children[0].classList.add('blinking');
       setTimeout(()=>{
@@ -51,9 +56,9 @@ class BoxStage{
       this.boxes = boxSet;
    }
    getBox(id:string):StageBox{
-      return this.boxes.reduce((defalt:StageBox, box:StageBox)=>{
-         return box.element.id == id ? box : null;
-      });
+      return this.boxes.filter((box:StageBox)=>{
+         return box.element.id == id;
+      })[0];
    }
 }
 
@@ -62,32 +67,48 @@ class GameState{
    public isPlaying:boolean;
    public strictMode:boolean;
    public currentSequence:Array<string>;
+   public currentTimers:Array<number>;
    constructor(initialState:GameState){
       this.isPlayerTurn = initialState.isPlayerTurn;
       this.isPlaying = initialState.isPlaying;
       this.strictMode = initialState.strictMode;
       this.currentSequence = initialState.currentSequence;
+      this.currentTimers = initialState.currentTimers;
    }
 }
 
 function loadGame(state: GameState, stage:BoxStage):void{
    let sequenceDelay:number = 1000;
    if(state.isPlaying){
+      var newBoxIndex = Math.floor(Math.random() * stage.boxes.length) + 0;
+      state.currentSequence.push(stage.boxes[newBoxIndex].element.id);
       var delay:number = sequenceDelay;
-      state.currentSequence.forEach((id:string) => {
-         setTimeout(()=>{
+      state.currentSequence.forEach((id:string, index:number, sequence:Array<string>) => {
+         var timer =  setTimeout(()=>{
             stage.getBox(id).blink();
+            clearTimeout(timer);
+            state.currentTimers.pop();
          },delay);
+         state.currentTimers.push(timer);
+         console.log(state.currentTimers, state.currentSequence);
          delay+=sequenceDelay;
+         // getAnswer(state, stage).then(()=>{});
       });
-      console.log(state.currentSequence);
-      // var newBoxIndex = Math.floor(Math.random() * stage.boxes.length) + 0;
-      // stage.boxes[newBoxIndex].blink();
-      // state.currentSequence.push(stage.boxes[newBoxIndex].element.id);
+   } else {
+      state.currentTimers.forEach((timer)=>{clearTimeout(timer)});
+      return;
    }
 }
 
+// function getAnswer(state:GameState, stage:BoxStage){
+//    var answer = new Promise((resolve, reject)=>{
+//       resolve(state);
+//    });
+// }
+
 window.addEventListener('load', () => {
+
+   var stopGame:Event = new Event('stop');
 
    var stage:BoxStage = new BoxStage(
       $$('stage-box').map((element)=>{
@@ -99,7 +120,8 @@ window.addEventListener('load', () => {
       isPlayerTurn      : false,
       isPlaying       : false,
       strictMode      : false,
-      currentSequence : ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'],
+      currentSequence : [],
+      currentTimers: [],
    });
 
    $('strictModeToggle').addEventListener('click' , () => {

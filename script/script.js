@@ -6,30 +6,30 @@ function $$(className) {
 }
 var StageBox = (function () {
     function StageBox(element) {
-        var _this = this;
         this.element = element;
-        this.resetAudio();
-        this.element.addEventListener('click', function () {
-            _this.blink();
-        });
-        console.log(this.element.id);
-    }
-    StageBox.prototype.resetAudio = function () {
-        if (this.audio != null) {
-            delete this.audio;
-        }
-        this.audio = new Audio(this.element.id == 'x' ? '/assets/sound/C3.mp3'
+        this.audioSrc = this.element.id == 'x' ? '/assets/sound/C3.mp3'
             : this.element.id == 'square' ? '/assets/sound/E3.mp3'
                 : this.element.id == 'circle' ? '/assets/sound/G3.mp3'
                     : this.element.id == 'triangle' ? '/assets/sound/B3.mp3'
-                        : null);
+                        : null;
+        this.audio = new Audio(this.audioSrc);
+        this.self = this;
+    }
+    StageBox.prototype.enable = function () {
+        var _this = this;
+        this.element.addEventListener('click', function () { _this.onClick(); });
+    };
+    StageBox.prototype.disable = function () {
+        var _this = this;
+        this.element.removeEventListener('click', function () { _this.onClick(); });
     };
     StageBox.prototype.onClick = function () {
         this.blink();
     };
     StageBox.prototype.blink = function () {
         var _this = this;
-        this.resetAudio();
+        delete this.audio;
+        this.audio = new Audio(this.audioSrc);
         this.audio.play();
         this.element.classList.add('blinking');
         this.element.children[0].classList.add('blinking');
@@ -45,9 +45,9 @@ var BoxStage = (function () {
         this.boxes = boxSet;
     }
     BoxStage.prototype.getBox = function (id) {
-        return this.boxes.reduce(function (defalt, box) {
-            return box.element.id == id ? box : null;
-        });
+        return this.boxes.filter(function (box) {
+            return box.element.id == id;
+        })[0];
     };
     return BoxStage;
 }());
@@ -57,23 +57,34 @@ var GameState = (function () {
         this.isPlaying = initialState.isPlaying;
         this.strictMode = initialState.strictMode;
         this.currentSequence = initialState.currentSequence;
+        this.currentTimers = initialState.currentTimers;
     }
     return GameState;
 }());
 function loadGame(state, stage) {
     var sequenceDelay = 1000;
     if (state.isPlaying) {
+        var newBoxIndex = Math.floor(Math.random() * stage.boxes.length) + 0;
+        state.currentSequence.push(stage.boxes[newBoxIndex].element.id);
         var delay = sequenceDelay;
-        state.currentSequence.forEach(function (id) {
-            setTimeout(function () {
+        state.currentSequence.forEach(function (id, index, sequence) {
+            var timer = setTimeout(function () {
                 stage.getBox(id).blink();
+                clearTimeout(timer);
+                state.currentTimers.pop();
             }, delay);
+            state.currentTimers.push(timer);
+            console.log(state.currentTimers, state.currentSequence);
             delay += sequenceDelay;
         });
-        console.log(state.currentSequence);
+    }
+    else {
+        state.currentTimers.forEach(function (timer) { clearTimeout(timer); });
+        return;
     }
 }
 window.addEventListener('load', function () {
+    var stopGame = new Event('stop');
     var stage = new BoxStage($$('stage-box').map(function (element) {
         return new StageBox(element);
     }));
@@ -81,7 +92,8 @@ window.addEventListener('load', function () {
         isPlayerTurn: false,
         isPlaying: false,
         strictMode: false,
-        currentSequence: ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x'],
+        currentSequence: [],
+        currentTimers: [],
     });
     $('strictModeToggle').addEventListener('click', function () {
         gameState.strictMode = !gameState.strictMode;
