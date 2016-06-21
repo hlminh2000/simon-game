@@ -33,14 +33,9 @@ class StageBox{
       this.blink();
    }
    blink(){
-      // console.log('stack 1 ', this.audio);
       delete this.audio;
-      // console.log('stack 2 ', this.audio);
       this.audio = new Audio(this.audioSrc);
-      // console.log('stack 3 ', this.audio);
       this.audio.play();
-      // console.log('stack 4 ', this.audio);
-
       this.element.classList.add('blinking');
       this.element.children[0].classList.add('blinking');
       setTimeout(()=>{
@@ -89,22 +84,27 @@ function loadGame(state: GameState, stage:BoxStage):void{
             clearTimeout(timer);
             state.currentTimers.pop();
          },delay);
-         state.currentTimers.push(timer);
-         console.log(state.currentTimers, state.currentSequence);
          delay+=sequenceDelay;
-         // getAnswer(state, stage).then(()=>{});
       });
+      setTimeout(()=>{
+         getAnswer(state, stage).then((state)=>{
+            console.log(state);
+         });
+      }, sequenceDelay * state.currentSequence.length);
    } else {
       state.currentTimers.forEach((timer)=>{clearTimeout(timer)});
       return;
    }
 }
 
-// function getAnswer(state:GameState, stage:BoxStage){
-//    var answer = new Promise((resolve, reject)=>{
-//       resolve(state);
-//    });
-// }
+function getAnswer(state:GameState, stage:BoxStage){
+   var answer = new Promise((resolve, reject)=>{
+      stage.boxes.forEach((box:StageBox) => {box.enable()});
+
+      console.log('Enabled');
+   });
+   return answer;
+}
 
 window.addEventListener('load', () => {
 
