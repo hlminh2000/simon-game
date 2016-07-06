@@ -91,27 +91,39 @@ var GameState = function GameState(initialState) {
     this.strictMode = initialState.strictMode;
     this.currentSequence = initialState.currentSequence;
     this.currentTimers = initialState.currentTimers;
+    this.answerSequence = initialState.answerSequence;
 };
 
 function loadGame(state, stage) {
     var sequenceDelay = 1000;
     if (state.isPlaying) {
-        var newBoxIndex = Math.floor(Math.random() * stage.boxes.length) + 0;
-        state.currentSequence.push(stage.boxes[newBoxIndex].element.id);
-        var delay = sequenceDelay;
-        state.currentSequence.forEach(function (id, index, sequence) {
-            var timer = setTimeout(function () {
-                stage.getBox(id).blink();
-                clearTimeout(timer);
-                state.currentTimers.pop();
-            }, delay);
-            delay += sequenceDelay;
-        });
-        setTimeout(function () {
-            getAnswer(state, stage).then(function (state) {
-                console.log(state);
+        if (!state.isPlayerTurn) {
+            var newBoxIndex = Math.floor(Math.random() * stage.boxes.length) + 0;
+            state.currentSequence.push(stage.boxes[newBoxIndex].element.id);
+            var delay = sequenceDelay;
+            state.currentSequence.forEach(function (id, index, sequence) {
+                var timer = setTimeout(function () {
+                    stage.getBox(id).blink();
+                    clearTimeout(timer);
+                    state.currentTimers.pop();
+                }, delay);
+                delay += sequenceDelay;
             });
-        }, sequenceDelay * state.currentSequence.length);
+            state.isPlayerTurn = true;
+            setTimeout(function () {
+                loadGame(state, stage);
+            }, sequenceDelay * state.currentSequence.length);
+        } else {
+            getAnswer(state, stage).then(function (isCorrect) {
+                stage.boxes.forEach(function (box) {
+                    return box.disable();
+                });
+                state.isPlayerTurn = false;
+                var timer = setTimeout(function () {
+                    loadGame(state, stage);
+                }, sequenceDelay * 2);
+            });
+        }
     } else {
         state.currentTimers.forEach(function (timer) {
             clearTimeout(timer);
@@ -120,13 +132,32 @@ function loadGame(state, stage) {
     }
 }
 function getAnswer(state, stage) {
-    var answer = new Promise(function (resolve, reject) {
+    var correctnessSequence = [];
+    var keyCounter = 0;
+    return new Promise(function (resolve, reject) {
         stage.boxes.forEach(function (box) {
             box.enable();
+            box.element.addEventListener('click', function onClick(e) {
+                correctnessSequence.push(box.element.id === state.currentSequence[keyCounter]);
+                if (correctnessSequence.length == state.currentSequence.length) {
+                    box.element.removeEventListener('click', onClick);
+                    if (correctnessSequence.filter(function (isCorrect) {
+                        return isCorrect;
+                    }).length == correctnessSequence.length) {
+                        resolve(true);
+                    } else {
+                        resolve(false);
+                    }
+                }
+                keyCounter++;
+            });
         });
-        console.log('Enabled');
     });
-    return answer;
+}
+function isSelectionCorrect(box, state, stage) {
+    return state.answerSequence.filter(function (id, index) {
+        return id == state.currentSequence[index];
+    }).length == state.answerSequence.length;
 }
 window.addEventListener('load', function () {
     var stopGame = new Event('stop');
@@ -138,7 +169,8 @@ window.addEventListener('load', function () {
         isPlaying: false,
         strictMode: false,
         currentSequence: [],
-        currentTimers: []
+        currentTimers: [],
+        answerSequence: []
     });
     $('strictModeToggle').addEventListener('click', function () {
         gameState.strictMode = !gameState.strictMode;
