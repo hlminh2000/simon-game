@@ -94,7 +94,20 @@ function handlePlayerResponse(submissionCorrect) {
     updateScore();
     clearUserSequence();
     currentState.currentTurn = Turn.AI;
-    setTimeout(startGame, 2500);
+    if (submissionCorrect) {
+        feedbackWhenWrong()
+            .then(startGame);
+    }
+    else {
+        setTimeout(startGame, 2500);
+    }
+}
+function feedbackWhenWrong() {
+    return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+            resolve();
+        }, 2500);
+    });
 }
 function updateScore() {
     elId("countValue").innerHTML = String(currentState.aiSequence.length);
