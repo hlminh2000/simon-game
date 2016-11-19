@@ -172,14 +172,16 @@ function updateScore():void{
 
 function toggleStrictMode():void
 {
-   currentState.strictMode = !currentState.strictMode;
-   updateVisual();
+   if(!currentState.isPlaying){
+      currentState.strictMode = !currentState.strictMode;
+      updateVisual();
+   }
 }
 
 function updateVisual():void
 {
    elId('strictModeToggler').innerHTML = currentState.strictMode ? "ON" : "OFF";
-   elId('startButton-text').innerHTML = currentState.isPlaying ? "STOP" : "START";
+   elId('startButton-text').innerHTML = currentState.isPlaying ? "RESET" : "START";
    updateScore();
 }
 

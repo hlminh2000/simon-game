@@ -142,12 +142,14 @@ function updateScore() {
     elId("countValue").innerHTML = String(currentState.aiSequence.length);
 }
 function toggleStrictMode() {
-    currentState.strictMode = !currentState.strictMode;
-    updateVisual();
+    if (!currentState.isPlaying) {
+        currentState.strictMode = !currentState.strictMode;
+        updateVisual();
+    }
 }
 function updateVisual() {
     elId('strictModeToggler').innerHTML = currentState.strictMode ? "ON" : "OFF";
-    elId('startButton-text').innerHTML = currentState.isPlaying ? "STOP" : "START";
+    elId('startButton-text').innerHTML = currentState.isPlaying ? "RESET" : "START";
     updateScore();
 }
 function getHighScore() {
