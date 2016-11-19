@@ -58,7 +58,6 @@ function stopGame(){
 }
 
 function toggleStartStop(){
-
    if(currentState.isPlaying){
       currentState.isPlaying = false;
       stopGame();
@@ -81,7 +80,7 @@ function newGameState():GameState{
 }
 
 function getRandomOption(){
-   return Options[Math.floor(Math.random() * (Options.length-1)) + 0];
+   return Options[Math.floor(Math.random() * (Options.length)) + 0];
 }
 
 function addAiMove(_moveOption:string){
@@ -229,7 +228,9 @@ function onBoxClick(id:string){
 }
 
 function playSoundById(id:string){
-   soundMap[id]().play();
+   var audio = soundMap[id]();
+   audio.volume = 0.5;
+   audio.play();
 }
 
 function highlightElement(id:string){

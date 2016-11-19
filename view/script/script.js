@@ -57,7 +57,7 @@ function newGameState() {
     };
 }
 function getRandomOption() {
-    return Options[Math.floor(Math.random() * (Options.length - 1)) + 0];
+    return Options[Math.floor(Math.random() * (Options.length)) + 0];
 }
 function addAiMove(_moveOption) {
     var move = {
@@ -188,7 +188,9 @@ function onBoxClick(id) {
     }
 }
 function playSoundById(id) {
-    soundMap[id]().play();
+    var audio = soundMap[id]();
+    audio.volume = 0.5;
+    audio.play();
 }
 function highlightElement(id) {
     elId(id).className += " blinking";
