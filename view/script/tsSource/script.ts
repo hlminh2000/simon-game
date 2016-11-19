@@ -15,6 +15,7 @@ interface GameState {
    currentTurn       : Turn;
    strictMode        : boolean;
    scoreHistory      : Array<number>;
+   isPlaying         : boolean;
 }
 // ------------------------
 
@@ -35,18 +36,37 @@ var soundMap = {
 };
 
 // --- FUNCTIONS ---
+currentState = newGameState();
 function startGame(){
-   if(!currentState){
-      currentState = newGameState();
-   }
-   var randomOption:string = getRandomOption();
-   addAiMove(randomOption);
-   playAiSequence()
+   if(currentState.isPlaying){
+      updateScore();
+      var randomOption:string = getRandomOption();
+      addAiMove(randomOption);
+      playAiSequence()
       .then(startPlayerTurn)
       .then(function(){
          return setDelay(listenToAnswer, 2000);
       })
-      .then(handlePlayerResponse);
+      .then(handlePlayerResponse)
+      .then(startGame);
+   }
+}
+
+function stopGame(){
+   currentState = newGameState();
+   updateScore();
+}
+
+function toggleStartStop(){
+
+   if(currentState.isPlaying){
+      currentState.isPlaying = false;
+      stopGame();
+   } else {
+      currentState.isPlaying = true;
+      startGame();
+   }
+   elId('startButton-text').innerHTML = currentState.isPlaying ? "STOP" : "START";
 }
 
 function newGameState():GameState{
@@ -56,6 +76,7 @@ function newGameState():GameState{
       currentTurn       : Turn.AI,
       strictMode        : false,
       scoreHistory      : [],
+      isPlaying         : false,
    }
 }
 
@@ -106,25 +127,31 @@ function listenToAnswer():Promise<any>{
    });
 }
 
-function handlePlayerResponse(submissionCorrect:boolean){
-   if(submissionCorrect){
-      console.log("good job");
-      currentState.scoreHistory.push(currentState.aiSequence.length);
-   } else {
-      console.log("boo");
-      if(currentState.strictMode){
-         clearAiSequence();
+function handlePlayerResponse(submissionCorrect:boolean):Promise<any>{
+   return new Promise(function(resolve, reject){
+      if(submissionCorrect){
+         console.log("good job");
+         currentState.scoreHistory.push(currentState.aiSequence.length);
+      } else {
+         console.log("boo");
+         if(currentState.strictMode){
+            clearAiSequence();
+         }
       }
-   }
-   updateScore();
-   clearUserSequence();
-   currentState.currentTurn = Turn.AI;
-   if(submissionCorrect){
-      feedbackWhenWrong()
-         .then(startGame);
-   } else {
-      setTimeout(startGame, 2500);
-   }
+      updateScore();
+      clearUserSequence();
+      currentState.currentTurn = Turn.AI;
+      if(submissionCorrect){
+         feedbackWhenWrong()
+            .then(function(){
+               resolve();
+            });
+      } else {
+         setTimeout(function(){
+            resolve();
+         }, 2500);
+      }
+   });
 }
 
 function feedbackWhenWrong():Promise<any>{
@@ -142,6 +169,7 @@ function updateScore():void{
 function toggleStrictMode():void
 {
    currentState.strictMode = !currentState.strictMode;
+   elId('strictModeToggler').innerHTML = currentState.strictMode ? "ON" : "OFF";
 }
 
 function getHighScore():number{

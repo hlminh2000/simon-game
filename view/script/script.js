@@ -16,18 +16,35 @@ var soundMap = {
     'square': function () { return new Audio('../assets/sound/E3.mp3'); },
     'x': function () { return new Audio('../assets/sound/G3.mp3'); }
 };
+currentState = newGameState();
 function startGame() {
-    if (!currentState) {
-        currentState = newGameState();
+    if (currentState.isPlaying) {
+        updateScore();
+        var randomOption = getRandomOption();
+        addAiMove(randomOption);
+        playAiSequence()
+            .then(startPlayerTurn)
+            .then(function () {
+            return setDelay(listenToAnswer, 2000);
+        })
+            .then(handlePlayerResponse)
+            .then(startGame);
     }
-    var randomOption = getRandomOption();
-    addAiMove(randomOption);
-    playAiSequence()
-        .then(startPlayerTurn)
-        .then(function () {
-        return setDelay(listenToAnswer, 2000);
-    })
-        .then(handlePlayerResponse);
+}
+function stopGame() {
+    currentState = newGameState();
+    updateScore();
+}
+function toggleStartStop() {
+    if (currentState.isPlaying) {
+        currentState.isPlaying = false;
+        stopGame();
+    }
+    else {
+        currentState.isPlaying = true;
+        startGame();
+    }
+    elId('startButton-text').innerHTML = currentState.isPlaying ? "STOP" : "START";
 }
 function newGameState() {
     return {
@@ -36,6 +53,7 @@ function newGameState() {
         currentTurn: Turn.AI,
         strictMode: false,
         scoreHistory: [],
+        isPlaying: false,
     };
 }
 function getRandomOption() {
@@ -81,26 +99,32 @@ function listenToAnswer() {
     });
 }
 function handlePlayerResponse(submissionCorrect) {
-    if (submissionCorrect) {
-        console.log("good job");
-        currentState.scoreHistory.push(currentState.aiSequence.length);
-    }
-    else {
-        console.log("boo");
-        if (currentState.strictMode) {
-            clearAiSequence();
+    return new Promise(function (resolve, reject) {
+        if (submissionCorrect) {
+            console.log("good job");
+            currentState.scoreHistory.push(currentState.aiSequence.length);
         }
-    }
-    updateScore();
-    clearUserSequence();
-    currentState.currentTurn = Turn.AI;
-    if (submissionCorrect) {
-        feedbackWhenWrong()
-            .then(startGame);
-    }
-    else {
-        setTimeout(startGame, 2500);
-    }
+        else {
+            console.log("boo");
+            if (currentState.strictMode) {
+                clearAiSequence();
+            }
+        }
+        updateScore();
+        clearUserSequence();
+        currentState.currentTurn = Turn.AI;
+        if (submissionCorrect) {
+            feedbackWhenWrong()
+                .then(function () {
+                resolve();
+            });
+        }
+        else {
+            setTimeout(function () {
+                resolve();
+            }, 2500);
+        }
+    });
 }
 function feedbackWhenWrong() {
     return new Promise(function (resolve, reject) {
@@ -114,6 +138,7 @@ function updateScore() {
 }
 function toggleStrictMode() {
     currentState.strictMode = !currentState.strictMode;
+    elId('strictModeToggler').innerHTML = currentState.strictMode ? "ON" : "OFF";
 }
 function getHighScore() {
     return currentState.scoreHistory.reduce(function (max, score) {
