@@ -21,7 +21,7 @@
     "browser-sync":"cd view; browser-sync start --server --files '*.html,script/*.js,style/*.css' ",
 
     "devUp": "npm run nodemon | npm run browser-sync",
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "author": "",
   "license": "ISC"
