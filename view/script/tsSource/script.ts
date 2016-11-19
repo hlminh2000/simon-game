@@ -34,6 +34,7 @@ var soundMap = {
    'square'    : function(){ return new Audio('../assets/sound/E3.mp3')},
    'x'         : function(){ return new Audio('../assets/sound/G3.mp3')}
 };
+var session:Array<GameState> = [];
 
 // --- FUNCTIONS ---
 currentState = newGameState();
@@ -65,18 +66,20 @@ function toggleStartStop(){
       currentState.isPlaying = true;
       startGame();
    }
-   elId('startButton-text').innerHTML = currentState.isPlaying ? "STOP" : "START";
+   updateVisual();
 }
 
 function newGameState():GameState{
-   return {
+   var state:GameState = {
       playerSequence    : [],
       aiSequence        : [],
       currentTurn       : Turn.AI,
       strictMode        : false,
       scoreHistory      : [],
       isPlaying         : false,
-   }
+   };
+   session.push(state);
+   return state;
 }
 
 function getRandomOption(){
@@ -95,10 +98,12 @@ function playAiSequence():Promise<boolean>{
    var promise:Promise<boolean> = new Promise(function(resolve, reject){
       currentState.aiSequence.forEach(function(move:Move){
          setTimeout(function(){
-            playSoundById(move.option);
-            highlightElement(move.option);
-            if(currentState.aiSequence.indexOf(move) === (currentState.aiSequence.length-1)){
-               resolve(true);
+            if(currentState.isPlaying){
+               playSoundById(move.option);
+               highlightElement(move.option);
+               if(currentState.aiSequence.indexOf(move) === (currentState.aiSequence.length-1)){
+                  resolve(true);
+               }
             }
          }, currentState.aiSequence.indexOf(move) * 1500);
       });
@@ -168,7 +173,14 @@ function updateScore():void{
 function toggleStrictMode():void
 {
    currentState.strictMode = !currentState.strictMode;
+   updateVisual();
+}
+
+function updateVisual():void
+{
    elId('strictModeToggler').innerHTML = currentState.strictMode ? "ON" : "OFF";
+   elId('startButton-text').innerHTML = currentState.isPlaying ? "STOP" : "START";
+   updateScore();
 }
 
 function getHighScore():number{
@@ -250,4 +262,42 @@ function setDelay(callback:()=>Promise<any>, delay):Promise<any>{
          });
       }, delay);
    });
+}
+
+function transmitSessionData():void{
+   var xhr:XMLHttpRequest = new XMLHttpRequest();
+   var url="/gameSession";
+   xhr.open('POST', url);
+   xhr.setRequestHeader("Content-type", "application/json");
+   xhr.onreadystatechange = function(){
+      if(xhr.readyState === 4 && xhr.status === 200){
+         console.log(xhr.responseText);
+      }
+   }
+   xhr.send(JSON.stringify(packageDataForTransmission(session)));
+}
+
+function getLatestState():void{
+   var xhr:XMLHttpRequest = new XMLHttpRequest();
+   var url="/latestState";
+   xhr.open('GET', url);
+   xhr.setRequestHeader("Content-type", "application/json");
+   xhr.onreadystatechange = function(){
+      if(xhr.readyState === 4 && xhr.status === 200){
+         console.log(xhr.responseText);
+         currentState = JSON.parse(xhr.responseText);
+         updateVisual();
+         if(currentState.isPlaying){
+            startGame();
+         }
+      }
+   }
+   xhr.send(JSON.stringify(packageDataForTransmission(session)));
+}
+
+function packageDataForTransmission(data:any):Object{
+   return {
+      timestamp: Date.now(),
+      data: data
+   };
 }

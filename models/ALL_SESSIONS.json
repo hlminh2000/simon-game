@@ -1,0 +1,114 @@
+[
+ {
+  "timestamp": 1479572213615,
+  "data": [
+   {
+    "playerSequence": [],
+    "aiSequence": [],
+    "currentTurn": 1,
+    "strictMode": false,
+    "scoreHistory": [],
+    "isPlaying": false
+   }
+  ]
+ },
+ {
+  "timestamp": 1479572215140,
+  "data": [
+   {
+    "playerSequence": [],
+    "aiSequence": [],
+    "currentTurn": 1,
+    "strictMode": false,
+    "scoreHistory": [],
+    "isPlaying": false
+   }
+  ]
+ },
+ {
+  "timestamp": 1479572215880,
+  "data": [
+   {
+    "playerSequence": [],
+    "aiSequence": [],
+    "currentTurn": 1,
+    "strictMode": false,
+    "scoreHistory": [],
+    "isPlaying": false
+   }
+  ]
+ },
+ {
+  "timestamp": 1479572216574,
+  "data": [
+   {
+    "playerSequence": [],
+    "aiSequence": [],
+    "currentTurn": 1,
+    "strictMode": false,
+    "scoreHistory": [],
+    "isPlaying": false
+   }
+  ]
+ },
+ {
+  "timestamp": 1479572218187,
+  "data": [
+   {
+    "playerSequence": [],
+    "aiSequence": [],
+    "currentTurn": 1,
+    "strictMode": false,
+    "scoreHistory": [],
+    "isPlaying": false
+   }
+  ]
+ },
+ {
+  "timestamp": 1479572218710,
+  "data": [
+   {
+    "playerSequence": [],
+    "aiSequence": [],
+    "currentTurn": 1,
+    "strictMode": false,
+    "scoreHistory": [],
+    "isPlaying": false
+   }
+  ]
+ },
+ {
+  "timestamp": 1479572940272,
+  "data": [
+   {
+    "playerSequence": [],
+    "aiSequence": [
+     {
+      "option": "square",
+      "moveIndex": 0
+     },
+     {
+      "option": "x",
+      "moveIndex": 1
+     },
+     {
+      "option": "square",
+      "moveIndex": 2
+     },
+     {
+      "option": "square",
+      "moveIndex": 3
+     }
+    ],
+    "currentTurn": 1,
+    "strictMode": false,
+    "scoreHistory": [
+     1,
+     2,
+     3
+    ],
+    "isPlaying": true
+   }
+  ]
+ }
+]

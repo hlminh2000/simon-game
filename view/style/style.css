@@ -130,14 +130,14 @@ body {
   margin-left: 15px;
   font-size: 30px; }
 
-.button-start {
+.button-slant {
   position: absolute;
   background: #68b3ce;
   width: 60px;
   height: 30px;
   top: 260px;
   left: 335px; }
-  .button-start .triangle-left {
+  .button-slant .triangle-left {
     position: absolute;
     top: 1.9px;
     left: -17px;
@@ -145,7 +145,7 @@ body {
     border-bottom: solid 21px transparent;
     border-left: solid 21px #68b3ce;
     transform: rotate(45deg); }
-  .button-start .triangle-right {
+  .button-slant .triangle-right {
     position: absolute;
     top: -13px;
     left: 57px;
@@ -153,6 +153,14 @@ body {
     border-bottom: solid 21px transparent;
     border-left: solid 21px #68b3ce;
     transform: rotate(225deg); }
+
+#saveButton {
+  top: 300px;
+  left: 295px; }
+
+#loadButton {
+  top: 340px;
+  left: 255px; }
 
 @media (max-width: 640px) {
   .stage {
@@ -173,10 +181,20 @@ body {
     margin-left: 0px;
     left: 30%; }
 
-  .button-start {
+  #saveButton {
     top: 30%;
-    left: 50%;
-    margin-left: -30px; } }
+    left: 30%;
+    margin-left: -60px; }
+
+  #startButton {
+    top: 30%;
+    left: 60%;
+    margin-left: -80px; }
+
+  #loadButton {
+    top: 30%;
+    left: 90%;
+    margin-left: -100px; } }
 .rotator {
   height: 500px;
   width: 500px;
