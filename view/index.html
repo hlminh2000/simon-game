@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,target-densitydpi=device-dpi, user-scalable=no" />
+    <meta charset="utf-8">
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="style/style.css" media="screen" title="no title" charset="utf-8">
+    <script type="text/javascript" src="script/script.js"></script>
+    <title>Simon Game</title>
+  </head>
+
+
+  <body class="flex flex-center flex-middle">
+    <div class="rotator">
+      <div class="decor flex flex-wrap" id="decor_1">
+        <div class="decor-box"></div>
+        <div class="decor-box"></div>
+        <div class="decor-box"></div>
+        <div class="decor-box"></div>
+      </div>
+      <div class="decor flex flex-wrap" id="decor_2">
+        <div class="decor-box"></div>
+        <div class="decor-box"></div>
+        <div class="decor-box"></div>
+        <div class="decor-box"></div>
+      </div>
+      <div class="decor flex flex-wrap" id="decor_3">
+        <div class="decor-box"></div>
+        <div class="decor-box"></div>
+        <div class="decor-box"></div>
+        <div class="decor-box"></div>
+      </div>
+      <div class="decor flex flex-wrap" id="decor_4">
+        <div class="decor-box"></div>
+        <div class="decor-box"></div>
+        <div class="decor-box"></div>
+        <div class="decor-box"></div>
+      </div>
+    </div>
+    <div class="stageCont">
+      <div class="stage flex flex-wrap">
+        <div id="triangle" class="stage-box flex flex-center flex-middle pointer" onclick="onBoxClick('triangle')">
+          <img class="stage-icon" src="assets/triangle.png" alt="" />
+        </div>
+        <div id="circle"   class="stage-box flex flex-center flex-middle pointer" onclick="onBoxClick('circle')">
+          <img class="stage-icon" src="assets/circle.png" alt="" />
+        </div>
+        <div id="square"   class="stage-box flex flex-center flex-middle pointer" onclick="onBoxClick('square')">
+          <img class="stage-icon" src="assets/square.png" alt="" />
+        </div>
+        <div id="x"        class="stage-box flex flex-center flex-middle pointer" onclick="onBoxClick('x')">
+          <img class="stage-icon" src="assets/x.png" alt="" />
+        </div>
+      </div>
+      <div class="count">
+        <span class="label">Count</span>
+        <span id="countValue" class="value">0</span>
+      </div>
+      <div class="strictMode">
+        <span class="label">Strict</span>
+        <span id="strictModeToggle" class="value pointer">OFF</span>
+      </div>
+      <div id='startButton' class="button button-start flex flex-middle flex-center pointer" onclick="startGame()">
+        <div class="button-background triangle-left"></div>
+        <div class="button-background triangle-right"></div>
+        <div id='startButton-text' class="button-text">START</div>
+      </div>
+    </div>
+  </body>
+
+</html>
