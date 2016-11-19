@@ -20,7 +20,8 @@
     "babel": "babel view/script/script.js --watch --out-file view/script/script-compiled.js",
     "browser-sync":"cd view; browser-sync start --server --files '*.html,script/*.js,style/*.css' ",
 
-    "devUp": "npm run nodemon | npm run browser-sync"
+    "devUp": "npm run nodemon | npm run browser-sync",
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC"
