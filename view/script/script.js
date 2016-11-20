@@ -16,20 +16,27 @@ var soundMap = {
     'square': function () { return new Audio('../assets/sound/E3.mp3'); },
     'x': function () { return new Audio('../assets/sound/G3.mp3'); }
 };
-var session = [];
+var currentSession = {
+    gameStates: [],
+    userSignature: null
+};
 currentState = newGameState();
-function startGame() {
+function startCycle(lastCyclePassedPassed) {
     if (currentState.isPlaying) {
-        updateScore();
-        var randomOption = getRandomOption();
-        addAiMove(randomOption);
+        if (lastCyclePassedPassed) {
+            var randomOption = getRandomOption();
+            addAiMove(randomOption);
+        }
         playAiSequence()
             .then(startPlayerTurn)
             .then(function () {
-            return setDelay(listenToAnswer, 2000);
+            updateScore();
+            return setDelay(listenToAnswer, 0);
         })
             .then(handlePlayerResponse)
-            .then(startGame);
+            .then(function (_lastCyclePassed) {
+            startCycle(_lastCyclePassed);
+        });
     }
 }
 function stopGame() {
@@ -43,7 +50,7 @@ function toggleStartStop() {
     }
     else {
         currentState.isPlaying = true;
-        startGame();
+        startCycle(true);
     }
     updateVisual();
 }
@@ -56,7 +63,7 @@ function newGameState() {
         scoreHistory: [],
         isPlaying: false,
     };
-    session.push(state);
+    currentSession.gameStates.push(state);
     return state;
 }
 function getRandomOption() {
@@ -118,24 +125,31 @@ function handlePlayerResponse(submissionCorrect) {
         updateScore();
         clearUserSequence();
         currentState.currentTurn = Turn.AI;
-        if (submissionCorrect) {
+        if (!submissionCorrect) {
             feedbackWhenWrong()
                 .then(function () {
-                resolve();
+                resolve(submissionCorrect);
             });
         }
         else {
             setTimeout(function () {
-                resolve();
+                resolve(submissionCorrect);
             }, 2500);
         }
     });
 }
 function feedbackWhenWrong() {
     return new Promise(function (resolve, reject) {
-        setTimeout(function () {
-            resolve();
-        }, 2500);
+        var rotationCycle = 0;
+        var interval = setInterval(function () {
+            document.getElementById('stageBox').style.transform = 'rotate(' + (45 + Math.sin(rotationCycle / 20) * 5) + "deg)";
+            rotationCycle++;
+            if (rotationCycle >= 60 * Math.PI) {
+                document.getElementById('stageBox').style.transform = 'rotate(45deg)';
+                clearInterval(interval);
+                resolve();
+            }
+        }, 10);
     });
 }
 function updateScore() {
@@ -181,7 +195,9 @@ function addPlayerMove(_moveOption) {
         option: _moveOption,
         moveIndex: currentState.playerSequence.length,
     };
-    currentState.playerSequence.push(move);
+    if (currentState.playerSequence.length < currentState.aiSequence.length) {
+        currentState.playerSequence.push(move);
+    }
 }
 function elId(id) {
     return document.getElementById(id);
@@ -231,7 +247,7 @@ function transmitSessionData() {
             console.log(xhr.responseText);
         }
     };
-    xhr.send(JSON.stringify(packageDataForTransmission(session)));
+    xhr.send(JSON.stringify(packageDataForTransmission(currentSession)));
 }
 function getLatestState() {
     var xhr = new XMLHttpRequest();
@@ -244,11 +260,11 @@ function getLatestState() {
             currentState = JSON.parse(xhr.responseText);
             updateVisual();
             if (currentState.isPlaying) {
-                startGame();
+                startCycle(false);
             }
         }
     };
-    xhr.send(JSON.stringify(packageDataForTransmission(session)));
+    xhr.send(JSON.stringify(packageDataForTransmission(currentSession)));
 }
 function packageDataForTransmission(data) {
     return {

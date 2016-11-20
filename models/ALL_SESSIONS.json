@@ -1,114 +1,170 @@
 [
  {
-  "timestamp": 1479572213615,
-  "data": [
-   {
-    "playerSequence": [],
-    "aiSequence": [],
-    "currentTurn": 1,
-    "strictMode": false,
-    "scoreHistory": [],
-    "isPlaying": false
-   }
-  ]
+  "timestamp": 1479600714209,
+  "data": {
+   "gameStates": [
+    {
+     "playerSequence": [],
+     "aiSequence": [
+      {
+       "option": "x",
+       "moveIndex": 0
+      },
+      {
+       "option": "square",
+       "moveIndex": 1
+      }
+     ],
+     "currentTurn": 1,
+     "strictMode": false,
+     "scoreHistory": [
+      1
+     ],
+     "isPlaying": true
+    }
+   ],
+   "userSignature": null
+  }
  },
  {
-  "timestamp": 1479572215140,
-  "data": [
-   {
-    "playerSequence": [],
-    "aiSequence": [],
-    "currentTurn": 1,
-    "strictMode": false,
-    "scoreHistory": [],
-    "isPlaying": false
-   }
-  ]
+  "timestamp": 1479617234809,
+  "data": {
+   "gameStates": [
+    {
+     "playerSequence": [],
+     "aiSequence": [
+      {
+       "option": "x",
+       "moveIndex": 0
+      },
+      {
+       "option": "x",
+       "moveIndex": 1
+      },
+      {
+       "option": "x",
+       "moveIndex": 2
+      },
+      {
+       "option": "square",
+       "moveIndex": 3
+      },
+      {
+       "option": "square",
+       "moveIndex": 4
+      },
+      {
+       "option": "x",
+       "moveIndex": 5
+      },
+      {
+       "option": "square",
+       "moveIndex": 6
+      },
+      {
+       "option": "triangle",
+       "moveIndex": 7
+      },
+      {
+       "option": "square",
+       "moveIndex": 8
+      },
+      {
+       "option": "square",
+       "moveIndex": 9
+      },
+      {
+       "option": "triangle",
+       "moveIndex": 10
+      }
+     ],
+     "currentTurn": 0,
+     "strictMode": false,
+     "scoreHistory": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+     ],
+     "isPlaying": true
+    }
+   ],
+   "userSignature": null
+  }
  },
  {
-  "timestamp": 1479572215880,
-  "data": [
-   {
-    "playerSequence": [],
-    "aiSequence": [],
-    "currentTurn": 1,
-    "strictMode": false,
-    "scoreHistory": [],
-    "isPlaying": false
-   }
-  ]
- },
- {
-  "timestamp": 1479572216574,
-  "data": [
-   {
-    "playerSequence": [],
-    "aiSequence": [],
-    "currentTurn": 1,
-    "strictMode": false,
-    "scoreHistory": [],
-    "isPlaying": false
-   }
-  ]
- },
- {
-  "timestamp": 1479572218187,
-  "data": [
-   {
-    "playerSequence": [],
-    "aiSequence": [],
-    "currentTurn": 1,
-    "strictMode": false,
-    "scoreHistory": [],
-    "isPlaying": false
-   }
-  ]
- },
- {
-  "timestamp": 1479572218710,
-  "data": [
-   {
-    "playerSequence": [],
-    "aiSequence": [],
-    "currentTurn": 1,
-    "strictMode": false,
-    "scoreHistory": [],
-    "isPlaying": false
-   }
-  ]
- },
- {
-  "timestamp": 1479572940272,
-  "data": [
-   {
-    "playerSequence": [],
-    "aiSequence": [
-     {
-      "option": "square",
-      "moveIndex": 0
-     },
-     {
-      "option": "x",
-      "moveIndex": 1
-     },
-     {
-      "option": "square",
-      "moveIndex": 2
-     },
-     {
-      "option": "square",
-      "moveIndex": 3
-     }
-    ],
-    "currentTurn": 1,
-    "strictMode": false,
-    "scoreHistory": [
-     1,
-     2,
-     3
-    ],
-    "isPlaying": true
-   }
-  ]
+  "timestamp": 1479621816949,
+  "data": {
+   "gameStates": [
+    {
+     "playerSequence": [],
+     "aiSequence": [
+      {
+       "option": "circle",
+       "moveIndex": 0
+      },
+      {
+       "option": "square",
+       "moveIndex": 1
+      },
+      {
+       "option": "triangle",
+       "moveIndex": 2
+      },
+      {
+       "option": "circle",
+       "moveIndex": 3
+      },
+      {
+       "option": "square",
+       "moveIndex": 4
+      },
+      {
+       "option": "x",
+       "moveIndex": 5
+      },
+      {
+       "option": "square",
+       "moveIndex": 6
+      }
+     ],
+     "currentTurn": 1,
+     "strictMode": false,
+     "scoreHistory": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "isPlaying": false
+    },
+    {
+     "playerSequence": [],
+     "aiSequence": [],
+     "currentTurn": 1,
+     "strictMode": true,
+     "scoreHistory": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "isPlaying": true
+    }
+   ],
+   "userSignature": null
+  }
  }
 ]

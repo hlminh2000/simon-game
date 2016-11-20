@@ -178,6 +178,10 @@ body{
   }
 }
 
+.hidden{
+   display: none;
+}
+
 #saveButton{
    top: 300px;
    left: 295px;
@@ -186,6 +190,12 @@ body{
 #loadButton{
    top: 340px;
    left: 255px;
+}
+
+#logIn{
+   display: flex;
+   position: absolute;
+   top: 70%;
 }
 
 @media (max-width: 640px) {

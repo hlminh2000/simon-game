@@ -14,7 +14,6 @@ api.post('/gameSession', (req, res) => {
 	a_sessions.push(sessionData);
 	fs.writeFileSync(ALL_SESSIONS_FILE, JSON.stringify(a_sessions, null, ' '));
 	console.log(a_sessions);
-
 	res.end();
 });
 
@@ -24,7 +23,8 @@ api.get('/latestState', (req, res) => {
 		.sort((sA, sB) => {
 			return sB.timestamp - sA.timestamp;
 		})[0].data;
-	var latestState = latestSession[latestSession.length-1];
+	var latestState = latestSession.gameStates[latestSession.gameStates.length-1];
+	console.log(JSON.stringify(latestState));
 	res.end(JSON.stringify(latestState));
 });
 

@@ -17,6 +17,11 @@ interface GameState {
    scoreHistory      : Array<number>;
    isPlaying         : boolean;
 }
+
+interface SessionData {
+   gameStates     :  Array<GameState>;
+   userSignature  :  string;
+}
 // ------------------------
 
 
@@ -34,22 +39,29 @@ var soundMap = {
    'square'    : function(){ return new Audio('../assets/sound/E3.mp3')},
    'x'         : function(){ return new Audio('../assets/sound/G3.mp3')}
 };
-var session:Array<GameState> = [];
+var currentSession:SessionData = {
+   gameStates : [],
+   userSignature : null
+};
 
 // --- FUNCTIONS ---
 currentState = newGameState();
-function startGame(){
+function startCycle(lastCyclePassedPassed:boolean){
    if(currentState.isPlaying){
-      updateScore();
-      var randomOption:string = getRandomOption();
-      addAiMove(randomOption);
+      if(lastCyclePassedPassed){
+         var randomOption:string = getRandomOption();
+         addAiMove(randomOption);
+      }
       playAiSequence()
       .then(startPlayerTurn)
       .then(function(){
-         return setDelay(listenToAnswer, 2000);
+         updateScore();
+         return setDelay(listenToAnswer, 0);
       })
       .then(handlePlayerResponse)
-      .then(startGame);
+      .then(function(_lastCyclePassed){
+         startCycle(_lastCyclePassed);
+      });
    }
 }
 
@@ -64,7 +76,7 @@ function toggleStartStop(){
       stopGame();
    } else {
       currentState.isPlaying = true;
-      startGame();
+      startCycle(true);
    }
    updateVisual();
 }
@@ -78,7 +90,7 @@ function newGameState():GameState{
       scoreHistory      : [],
       isPlaying         : false,
    };
-   session.push(state);
+   currentSession.gameStates.push(state);
    return state;
 }
 
@@ -145,14 +157,14 @@ function handlePlayerResponse(submissionCorrect:boolean):Promise<any>{
       updateScore();
       clearUserSequence();
       currentState.currentTurn = Turn.AI;
-      if(submissionCorrect){
+      if(!submissionCorrect){
          feedbackWhenWrong()
             .then(function(){
-               resolve();
+               resolve(submissionCorrect);
             });
       } else {
          setTimeout(function(){
-            resolve();
+            resolve(submissionCorrect);
          }, 2500);
       }
    });
@@ -160,9 +172,16 @@ function handlePlayerResponse(submissionCorrect:boolean):Promise<any>{
 
 function feedbackWhenWrong():Promise<any>{
    return new Promise(function(resolve, reject){
-      setTimeout(function(){
-         resolve();
-      }, 2500)
+      var rotationCycle = 0;
+      var interval = setInterval(function(){
+         document.getElementById('stageBox').style.transform = 'rotate(' + (45+Math.sin(rotationCycle/20)*5) + "deg)";
+         rotationCycle++;
+         if(rotationCycle >= 60*Math.PI){
+            document.getElementById('stageBox').style.transform = 'rotate(45deg)';
+            clearInterval(interval);
+            resolve();
+         }
+      }, 10);
    });
 }
 
@@ -218,7 +237,9 @@ function addPlayerMove(_moveOption:string){
          option   : _moveOption,
          moveIndex: currentState.playerSequence.length,
       };
-      currentState.playerSequence.push(move);
+      if(currentState.playerSequence.length < currentState.aiSequence.length){
+         currentState.playerSequence.push(move);
+      }
 }
 
 function elId(id:string){
@@ -276,7 +297,9 @@ function transmitSessionData():void{
          console.log(xhr.responseText);
       }
    }
-   xhr.send(JSON.stringify(packageDataForTransmission(session)));
+   // var nameInput:HTMLInputElement = elId('input_signature');
+   // currentSession.userSignature = nameInput.value;
+   xhr.send(JSON.stringify(packageDataForTransmission(currentSession)));
 }
 
 function getLatestState():void{
@@ -290,11 +313,11 @@ function getLatestState():void{
          currentState = JSON.parse(xhr.responseText);
          updateVisual();
          if(currentState.isPlaying){
-            startGame();
+            startCycle(false);
          }
       }
    }
-   xhr.send(JSON.stringify(packageDataForTransmission(session)));
+   xhr.send(JSON.stringify(packageDataForTransmission(currentSession)));
 }
 
 function packageDataForTransmission(data:any):Object{
