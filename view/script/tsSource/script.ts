@@ -46,11 +46,10 @@ var currentSession:SessionData = {
 
 // --- FUNCTIONS ---
 currentState = newGameState();
-function startCycle(lastCyclePassedPassed:boolean){
+function startCycle(lastCyclePassed:boolean){
    if(currentState.isPlaying){
-      if(lastCyclePassedPassed){
-         var randomOption:string = getRandomOption();
-         addAiMove(randomOption);
+      if(lastCyclePassed){
+         addAiMove(getRandomOption());
       }
       playAiSequence()
       .then(startPlayerTurn)
@@ -65,7 +64,7 @@ function startCycle(lastCyclePassedPassed:boolean){
    }
 }
 
-function stopGame(){
+function stopCycle(){
    currentState = newGameState();
    updateScore();
 }
@@ -73,8 +72,9 @@ function stopGame(){
 function toggleStartStop(){
    if(currentState.isPlaying){
       currentState.isPlaying = false;
-      stopGame();
+      stopCycle();
    } else {
+      currentState = newGameState();
       currentState.isPlaying = true;
       startCycle(true);
    }
@@ -94,7 +94,8 @@ function newGameState():GameState{
    return state;
 }
 
-function getRandomOption(){
+function getRandomOption():string
+{
    return Options[Math.floor(Math.random() * (Options.length)) + 0];
 }
 
@@ -163,9 +164,10 @@ function handlePlayerResponse(submissionCorrect:boolean):Promise<any>{
                resolve(submissionCorrect);
             });
       } else {
-         setTimeout(function(){
-            resolve(submissionCorrect);
-         }, 2500);
+         feedbackWhenCorrect()
+            .then(function(){
+               resolve(submissionCorrect);
+            });
       }
    });
 }
@@ -174,14 +176,32 @@ function feedbackWhenWrong():Promise<any>{
    return new Promise(function(resolve, reject){
       var rotationCycle = 0;
       var interval = setInterval(function(){
-         document.getElementById('stageBox').style.transform = 'rotate(' + (45+Math.sin(rotationCycle/20)*5) + "deg)";
+         elId('stageBox').style.transform = 'rotate(' + (45+Math.sin(rotationCycle/20)*5) + "deg)";
          rotationCycle++;
          if(rotationCycle >= 60*Math.PI){
-            document.getElementById('stageBox').style.transform = 'rotate(45deg)';
+            elId('stageBox').style.transform = 'rotate(45deg)';
             clearInterval(interval);
             resolve();
          }
       }, 10);
+   });
+}
+
+function feedbackWhenCorrect():Promise<any>{
+   return new Promise(function(resolve, reject){
+      Options.forEach(function(option){
+         elId(option).style.boxShadow = '0px 0px 28px 0px rgba(0,255,132,1);';
+         setDelay(function(){
+            return new Promise(function(res, rej){
+               elId(option).style.boxShadow = 'none';
+               res();
+            });
+         }, 1000).then(function(){
+            setTimeout(function(){
+               resolve();
+            }, 500);
+         })
+      });
    });
 }
 
@@ -313,7 +333,7 @@ function getLatestState():void{
          currentState = JSON.parse(xhr.responseText);
          updateVisual();
          if(currentState.isPlaying){
-            startCycle(false);
+            startCycle(true);
          }
       }
    }

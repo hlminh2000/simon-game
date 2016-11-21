@@ -21,11 +21,10 @@ var currentSession = {
     userSignature: null
 };
 currentState = newGameState();
-function startCycle(lastCyclePassedPassed) {
+function startCycle(lastCyclePassed) {
     if (currentState.isPlaying) {
-        if (lastCyclePassedPassed) {
-            var randomOption = getRandomOption();
-            addAiMove(randomOption);
+        if (lastCyclePassed) {
+            addAiMove(getRandomOption());
         }
         playAiSequence()
             .then(startPlayerTurn)
@@ -39,16 +38,17 @@ function startCycle(lastCyclePassedPassed) {
         });
     }
 }
-function stopGame() {
+function stopCycle() {
     currentState = newGameState();
     updateScore();
 }
 function toggleStartStop() {
     if (currentState.isPlaying) {
         currentState.isPlaying = false;
-        stopGame();
+        stopCycle();
     }
     else {
+        currentState = newGameState();
         currentState.isPlaying = true;
         startCycle(true);
     }
@@ -132,9 +132,10 @@ function handlePlayerResponse(submissionCorrect) {
             });
         }
         else {
-            setTimeout(function () {
+            feedbackWhenCorrect()
+                .then(function () {
                 resolve(submissionCorrect);
-            }, 2500);
+            });
         }
     });
 }
@@ -142,14 +143,31 @@ function feedbackWhenWrong() {
     return new Promise(function (resolve, reject) {
         var rotationCycle = 0;
         var interval = setInterval(function () {
-            document.getElementById('stageBox').style.transform = 'rotate(' + (45 + Math.sin(rotationCycle / 20) * 5) + "deg)";
+            elId('stageBox').style.transform = 'rotate(' + (45 + Math.sin(rotationCycle / 20) * 5) + "deg)";
             rotationCycle++;
             if (rotationCycle >= 60 * Math.PI) {
-                document.getElementById('stageBox').style.transform = 'rotate(45deg)';
+                elId('stageBox').style.transform = 'rotate(45deg)';
                 clearInterval(interval);
                 resolve();
             }
         }, 10);
+    });
+}
+function feedbackWhenCorrect() {
+    return new Promise(function (resolve, reject) {
+        Options.forEach(function (option) {
+            elId(option).style.boxShadow = '0px 0px 28px 0px rgba(0,255,132,1);';
+            setDelay(function () {
+                return new Promise(function (res, rej) {
+                    elId(option).style.boxShadow = 'none';
+                    res();
+                });
+            }, 1000).then(function () {
+                setTimeout(function () {
+                    resolve();
+                }, 500);
+            });
+        });
     });
 }
 function updateScore() {
@@ -260,7 +278,7 @@ function getLatestState() {
             currentState = JSON.parse(xhr.responseText);
             updateVisual();
             if (currentState.isPlaying) {
-                startCycle(false);
+                startCycle(true);
             }
         }
     };
