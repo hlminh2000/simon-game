@@ -714,5 +714,68 @@
    ],
    "userSignature": null
   }
+ },
+ {
+  "timestamp": 1482110401320,
+  "data": {
+   "gameStates": [
+    {
+     "playerSequence": [],
+     "aiSequence": [],
+     "currentTurn": 1,
+     "strictMode": false,
+     "scoreHistory": [],
+     "isPlaying": false
+    },
+    {
+     "playerSequence": [
+      {
+       "option": "circle",
+       "moveIndex": 0
+      },
+      {
+       "option": "x",
+       "moveIndex": 1
+      },
+      {
+       "option": "x",
+       "moveIndex": 2
+      }
+     ],
+     "aiSequence": [
+      {
+       "option": "circle",
+       "moveIndex": 0
+      },
+      {
+       "option": "x",
+       "moveIndex": 1
+      },
+      {
+       "option": "x",
+       "moveIndex": 2
+      },
+      {
+       "option": "x",
+       "moveIndex": 3
+      },
+      {
+       "option": "circle",
+       "moveIndex": 4
+      }
+     ],
+     "currentTurn": 0,
+     "strictMode": false,
+     "scoreHistory": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "isPlaying": true
+    }
+   ],
+   "userSignature": null
+  }
  }
 ]
