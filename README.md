@@ -1,4 +1,4 @@
-# React-Pong
+# Simon Game
 <!-- ## H2
 ### H3
 #### H4
@@ -14,15 +14,13 @@ A live version of this is hosted at: https://hlminh2000-simon-game.herokuapp.com
 - Probably my best UI project so far
 - Carefully engineered sound: it's the C7 chord!
 
-### Technical Features
+### Technologies used
 - Classical inheritance structure with typescript
 - SCSS for styling
 
-### Current Technical Limitations
-- Components are accessing store directly, hence they are currently non-reusable
-- linear-time replay doesn't support non keyframe-driven applications
-
-
+### What's coming next
+- Progress saving (in progress)
+- Leadership board
 
 <!-- Alt-H1 -->
 <!-- ====== -->
